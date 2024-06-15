@@ -15,6 +15,7 @@ export async function generateMetadata({
   params: { slug },
 }: ICarPageProps): Promise<Metadata> {
   const car = await fetchData(`?w=catalog-car&id=${slug}`);
+
   return {
     title: `Страница машины ${car.item.brand} ${car.item.model}`,
   };

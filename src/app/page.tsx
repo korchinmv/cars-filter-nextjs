@@ -1,17 +1,17 @@
-import { Suspense } from "react";
+import { fetchData } from "@/utils/fetchData";
 import CarsList from "@/components/CarsList/CarsList";
-import Loading from "@/components/Loading/Loading";
 import Title from "@/components/Title/Title";
+import Content from "@/components/Content/Content";
 
 export default async function Home() {
-  // const filters = await fetch(`${URL}?w=catalog-filter`);
+  const carsData = await fetchData("?w=catalog-cars");
+
+  // const filters = await fetchData(`${URL}?w=catalog-filter`);
 
   return (
     <main className='flex flex-col items-center justify-between p-24'>
       <Title text='Выбери свой автомобиль!' />
-      <Suspense fallback={<Loading text='Сейчас загрузятся машины...' />}>
-        <CarsList />
-      </Suspense>
+      <Content carsData={carsData} />
     </main>
   );
 }

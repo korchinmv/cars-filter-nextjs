@@ -3,7 +3,7 @@ interface ILoadingProps {
 }
 
 const Loading = ({ text }: ILoadingProps) => {
-  return <span>{text}</span>;
+  return <p className='mb-[20px]'>{text}</p>;
 };
 
 export default Loading;

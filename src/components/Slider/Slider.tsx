@@ -1,11 +1,12 @@
 "use client";
-import "swiper/css";
-import "swiper/css/navigation";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, EffectFade, A11y } from "swiper/modules";
+import { Navigation, EffectFade } from "swiper/modules";
 import { TImage } from "@/types/Image";
 import Image from "next/image";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/effect-fade";
 
 interface ISliderProps {
   data: TImage[];
@@ -14,9 +15,9 @@ interface ISliderProps {
 const Slider = ({ data }: ISliderProps) => {
   return (
     <Swiper
-      className='mb-[30px]'
+      className='mb-[30px] rounded-xl'
       navigation={true}
-      modules={[Navigation, EffectFade, A11y]}
+      modules={[Navigation, EffectFade]}
       effect={"fade"}
       slidesPerView={1}
       loop={true}
@@ -24,16 +25,14 @@ const Slider = ({ data }: ISliderProps) => {
       {data.map((image: TImage) => {
         return (
           <SwiperSlide key={parseInt(image.id)}>
-            {
-              <Image
-                className='cursor-grabbing'
-                src={image.image}
-                priority
-                alt='Картинка машины'
-                width='400'
-                height='150'
-              />
-            }
+            <Image
+              className='cursor-grabbing w-full'
+              src={image.image}
+              priority
+              alt='Картинка машины'
+              width='200'
+              height='200'
+            />
           </SwiperSlide>
         );
       })}

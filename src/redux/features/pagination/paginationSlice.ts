@@ -4,7 +4,7 @@ import { getLocalStorage } from "@/utils/getLocalStorage";
 const currentPage =
   getLocalStorage("paginationPage") !== null
     ? getLocalStorage("paginationPage")
-    : 0;
+    : 1;
 
 const setItemFunc = (page: number): void => {
   localStorage.setItem("paginationPage", JSON.stringify(page));

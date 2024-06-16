@@ -8,8 +8,8 @@ export const fetchData = async (path: string) => {
 
     const data = await response.json();
 
-    return data;
+    return { success: data };
   } catch (error) {
-    console.error("Failed to fetch data:", error);
+    return { error: `Failed to fetch data: ${error}` };
   }
 };

@@ -2,7 +2,7 @@ import { fetchData } from "@/utils/fetchData";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import Loading from "@/components/Loading/Loading";
-import Slider from "@/components/Slider/Slider";
+import Slider from "@/components/ui/Slider/Slider";
 import noPicImage from "@/../public/no-pic.jpg";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,22 +14,22 @@ interface ICarPageProps {
 export async function generateMetadata({
   params: { slug },
 }: ICarPageProps): Promise<Metadata> {
-  const car = await fetchData(`?w=catalog-car&id=${slug}`);
+  const { success } = await fetchData(`?w=catalog-car&id=${slug}`);
 
   return {
-    title: `Страница машины ${car.item.brand} ${car.item.model}`,
+    title: `Страница машины ${success.item.brand} ${success.item.model}`,
   };
 }
 
 const CarPage = async ({ params: { slug } }: ICarPageProps) => {
-  const car = await fetchData(`?w=catalog-car&id=${slug}`);
+  const { success } = await fetchData(`?w=catalog-car&id=${slug}`);
 
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
       <Suspense fallback={<Loading text='Загружаем данные о машине...' />}>
         <div className='border rounded-md p-10 w-[500px] mb-[30px]'>
-          {car.item.images !== null ? (
-            <Slider data={car.item.images} />
+          {success.item.images !== null ? (
+            <Slider data={success.item.images} />
           ) : (
             <Image
               className='mb-[30px] w-full rounded-xl'
@@ -43,23 +43,34 @@ const CarPage = async ({ params: { slug } }: ICarPageProps) => {
 
           <div className='content text-center'>
             <ul className='mb-[15px]'>
-              <li className='mb-[15px]'>Марка: {car.item.brand}</li>
-              <li className='mb-[15px]'>Модель: {car.item.model}</li>
-              <li className='mb-[15px]'>Номер: {car.item.number}</li>
-              <li className='mb-[15px]'>Цена: {car.item.price} руб.</li>
+              {success.item.brand && (
+                <li className='mb-[15px]'>Марка: {success.item.brand}</li>
+              )}
+              {success.item.model && (
+                <li className='mb-[15px]'>Модель: {success.item.model}</li>
+              )}
+              {success.item.number && (
+                <li className='mb-[15px]'>Номер: {success.item.number}</li>
+              )}
+              {success.item.price !== 0 ? (
+                <li className='mb-[15px]'>Цена: {success.item.price} руб.</li>
+              ) : null}
             </ul>
 
-            {car.item.tarif.length > 0 && (
+            {success.item.tarif.length > 0 && (
               <ul>
                 Тариф:
-                {car.item.tarif.map((tarif: string, i: number) => {
+                {success.item.tarif.map((tarif: string, i: number) => {
                   return <li key={i}>{tarif}</li>;
                 })}
               </ul>
             )}
           </div>
         </div>
-        <Link className='bg-white text-black rounded-lg py-2 px-3' href='/'>
+        <Link
+          className='bg-[#ed5564] text-black rounded-lg py-2 px-3 text-white'
+          href='/'
+        >
           Назад
         </Link>
       </Suspense>

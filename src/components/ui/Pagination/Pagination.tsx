@@ -24,9 +24,9 @@ const PaginationComponent = ({ pageQty }: IPaginationComponentProps) => {
         size='large'
         defaultPage={1}
         onChange={(_, num) => {
-          fetchData(`?w=catalog-cars&page=${num}`).then((cars) => {
-            dispatch(getCars(cars.list));
-            dispatch(updatePage(parseInt(cars.page)));
+          fetchData(`?w=catalog-cars&page=${num}`).then((data) => {
+            dispatch(getCars(data.success.list));
+            dispatch(updatePage(parseInt(data.success.page)));
           });
         }}
         sx={{

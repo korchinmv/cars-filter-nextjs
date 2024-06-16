@@ -2,21 +2,26 @@
 import { useAppDispatch } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import { getLocalStorage } from "@/utils/getLocalStorage";
+import { TFilterResponse } from "@/types/Filter";
 import { CarsResponse } from "@/types/CarsResponse";
 import { getCars } from "@/redux/features/cars/carsSlice";
-import PaginationComponent from "../Pagination/Pagination";
+import PaginationComponent from "../ui/Pagination/Pagination";
 import Loading from "@/components/Loading/Loading";
-import CarItem from "../CarsList/CarItem";
 import CarsList from "../CarsList/CarsList";
+import Filter from "../ui/Filter/Filter";
+import Title from "../Title/Title";
+import Link from "next/link";
 
 interface ICarsListProps {
   carsData: CarsResponse;
+  filterData: TFilterResponse;
 }
 
-const Content = ({ carsData }: ICarsListProps) => {
+const Content = ({ carsData, filterData }: ICarsListProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   const carsListStorage = getLocalStorage("carsList");
+  console.log(filterData);
 
   useEffect(() => {
     if (!carsListStorage) {
@@ -32,8 +37,21 @@ const Content = ({ carsData }: ICarsListProps) => {
 
   return (
     <>
-      <CarsList />
-      <PaginationComponent pageQty={carsData.pages} page={carsData.page} />
+      <Title text='Выбери свой автомобиль!' />
+      <Link
+        className='bg-[#ed5564] text-black rounded-lg py-2 px-3 text-[18px] mb-[40px] text-white'
+        href='/about'
+      >
+        О проекте
+      </Link>
+      <div className='flex justify-between max-w-[1200px] w-full'>
+        <Filter filterData={filterData} />
+
+        <div className='flex flex-col items-center'>
+          <CarsList />
+          <PaginationComponent pageQty={carsData.pages} page={carsData.page} />
+        </div>
+      </div>
     </>
   );
 };

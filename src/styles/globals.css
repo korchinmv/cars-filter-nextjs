@@ -31,3 +31,15 @@ body {
     text-wrap: balance;
   }
 }
+
+.MuiFormLabel-root {
+  transition: color 0.2s ease-in;
+}
+
+.MuiFormLabel-root:hover {
+  color: #ed5564;
+}
+
+.Mui-focused {
+  color: #ed5564 !important;
+}

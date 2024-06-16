@@ -2,7 +2,9 @@
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, EffectFade } from "swiper/modules";
+import { useState } from "react";
 import { TImage } from "@/types/Image";
+import noPicImage from "@/../public/no-pic.jpg";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,6 +15,8 @@ interface ISliderProps {
 }
 
 const Slider = ({ data }: ISliderProps) => {
+  const [errorImage, setErrorImage] = useState<string | null>(null);
+
   return (
     <Swiper
       className='mb-[30px] rounded-xl'
@@ -27,11 +31,14 @@ const Slider = ({ data }: ISliderProps) => {
           <SwiperSlide key={parseInt(image.id)}>
             <Image
               className='cursor-grabbing w-full'
-              src={image.image}
+              src={errorImage !== null ? errorImage : image.image}
               priority
               alt='Картинка машины'
               width='200'
               height='200'
+              onError={() => {
+                setErrorImage(noPicImage.src);
+              }}
             />
           </SwiperSlide>
         );

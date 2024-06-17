@@ -14,16 +14,19 @@ interface IFilterItemProps {
   selectedCheckbox: string[];
 }
 
+interface ICar {
+  brand: string;
+  models: string[];
+}
+
 const FilterModel = ({ data, selectedCheckbox }: IFilterItemProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [cars, setCars] = useState<{ brand: string; models: string[] }[]>(
-    data.values
-  );
+  const [cars, setCars] = useState<ICar[]>(data.values);
   console.log(cars);
 
   useEffect(() => {
     if (selectedCheckbox.length > 0) {
-      const filtredCheckboxes = data.values.filter((car) =>
+      const filtredCheckboxes = data.values.filter((car: ICar) =>
         selectedCheckbox.includes(car.brand)
       );
       setCars(filtredCheckboxes);

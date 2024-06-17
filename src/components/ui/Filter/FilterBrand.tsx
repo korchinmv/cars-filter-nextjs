@@ -10,9 +10,10 @@ import {
 
 interface IFilterItemProps {
   data: any;
+  getSelectedCheckbox: any;
 }
 
-const FilterBrand = ({ data }: IFilterItemProps) => {
+const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -41,7 +42,8 @@ const FilterBrand = ({ data }: IFilterItemProps) => {
                 labelPlacement='start'
                 control={
                   <Checkbox
-                    name={data.code}
+                    onChange={(e) => getSelectedCheckbox(e)}
+                    name={`${data.code}[]`}
                     value={value}
                     sx={{
                       color: "#fff",

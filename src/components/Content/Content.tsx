@@ -21,7 +21,6 @@ const Content = ({ carsData, filterData }: ICarsListProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   const carsListStorage = getLocalStorage("carsList");
-  console.log(filterData);
 
   useEffect(() => {
     if (!carsListStorage) {

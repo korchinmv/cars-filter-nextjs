@@ -17,7 +17,7 @@ const CarItem = ({ car }: ICarItem) => {
         <>
           <Link href={`/${car.id}`}>
             <Image
-              className='mb-[15px] h-[150px] object-cover'
+              className='mb-[15px] h-[150px] object-cover w-full'
               src={
                 errorImage !== null
                   ? errorImage
@@ -26,7 +26,7 @@ const CarItem = ({ car }: ICarItem) => {
                   : noPicImage
               }
               width={250}
-              height={0}
+              height={100}
               alt='Картинка машины'
               priority
               onError={() => {

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getKeysAndValuesInObj } from "@/utils/getKeysAndValuesInObj";
+import { TModels } from "@/types/Filter";
 import {
   Checkbox,
   FormControl,
@@ -10,10 +11,24 @@ import {
 
 interface IFilterItemProps {
   data: any;
+  selectedCheckbox: string[];
 }
 
-const FilterModel = ({ data }: IFilterItemProps) => {
+const FilterModel = ({ data, selectedCheckbox }: IFilterItemProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [cars, setCars] = useState<{ brand: string; models: string[] }[]>(
+    data.values
+  );
+  console.log(cars);
+
+  useEffect(() => {
+    if (selectedCheckbox.length > 0) {
+      const filtredCheckboxes = data.values.filter((car) =>
+        selectedCheckbox.includes(car.brand)
+      );
+      setCars(filtredCheckboxes);
+    }
+  }, [selectedCheckbox]);
 
   return (
     <FormControl sx={{ m: 3 }} component='fieldset'>
@@ -29,7 +44,7 @@ const FilterModel = ({ data }: IFilterItemProps) => {
       </FormLabel>
       {isOpen && (
         <FormGroup>
-          {data.values.map((value: any, i: number) => {
+          {cars.map((value: any, i: number) => {
             return (
               <div
                 className='flex flex-col mb-[30px]  border-[#ed5564] border-t-2 py-2'

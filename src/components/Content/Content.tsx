@@ -5,7 +5,6 @@ import { getLocalStorage } from "@/utils/getLocalStorage";
 import { TFilterResponse } from "@/types/Filter";
 import { TCarsResponse } from "@/types/CarsResponse";
 import { getCars } from "@/redux/features/cars/carsSlice";
-
 import PaginationComponent from "../ui/Pagination/Pagination";
 import Loading from "@/components/Loading/Loading";
 import CarsList from "../CarsList/CarsList";
@@ -19,15 +18,14 @@ interface ICarsListProps {
 }
 
 const Content = ({ carsData, filterData }: ICarsListProps) => {
-  const [allCars, setAllCars] = useState<TCarsResponse>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const carsListStorage = getLocalStorage("carsList");
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!carsListStorage) {
       dispatch(getCars(carsData));
-      setAllCars(carsData);
     }
 
     setIsLoading(false);
@@ -54,19 +52,8 @@ const Content = ({ carsData, filterData }: ICarsListProps) => {
         <Filter filterData={filterData} />
 
         <div className='flex flex-col items-center'>
-          <CarsList allCars={allCars} />
-          {/* <PaginationComponent
-            pageQty={
-              filtredCars.resp.list.length > 0
-                ? filtredCars.resp.pages
-                : carsData.pages
-            }
-            page={
-              filtredCars.resp.list.length > 0
-                ? filtredCars.resp.page
-                : carsData.page
-            }
-          /> */}
+          <CarsList />
+          <PaginationComponent />
         </div>
       </div>
     </>

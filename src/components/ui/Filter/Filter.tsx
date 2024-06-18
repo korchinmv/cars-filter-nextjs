@@ -1,10 +1,10 @@
 "use client";
 import { filterBrandCheckboxesSelector } from "@/redux/features/filter/filterBrandCheckboxes/filterBrandCheckboxesSelector";
-import { usePathname, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect } from "react";
 import { queryStringSelector } from "@/redux/features/queryString/queryStringSelector";
 import { TFilterResponse } from "@/types/Filter";
 import { updateString } from "@/redux/features/queryString/queryStringSlice";
+import { updatePage } from "@/redux/features/pagination/paginationSlice";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getCars } from "@/redux/features/cars/carsSlice";
@@ -25,8 +25,6 @@ const Filter = ({ filterData }: IFilterProps) => {
   const currentQueryString = useAppSelector(queryStringSelector);
   const filterBrand = useAppSelector(filterBrandCheckboxesSelector);
   const dispatch = useAppDispatch();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
   let newQueryString = "";
 
@@ -55,6 +53,11 @@ const Filter = ({ filterData }: IFilterProps) => {
     if (currentQueryString.string !== "") {
       fetchData(`?w=catalog-cars${currentQueryString.string}`).then((res) => {
         dispatch(getCars(res.success));
+      });
+    } else {
+      fetchData("?w=catalog-cars").then((res) => {
+        dispatch(getCars(res.success));
+        dispatch(updatePage(1));
       });
     }
   }, [filterBrand.checkboxes, router, currentQueryString.string]);

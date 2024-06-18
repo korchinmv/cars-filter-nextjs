@@ -18,17 +18,14 @@ const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
     new Array(data.values.length).fill(false)
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const stateBrandFilter = getLocalStorage("stateBrandFilter");
 
-  // useEffect(() => {
-  //   if (!stateBrandFilter) {
-  //     localStorage.setItem("stateBrandFilter", JSON.stringify(checkedState));
-  //   } else {
-  //     setCheckedState(stateBrandFilter);
-  //   }
-  // }, [stateBrandFilter]);
+  useEffect(() => {
+    const localBrandFilter = getLocalStorage("stateBrandFilter");
 
-  console.log(checkedState);
+    if (localBrandFilter) {
+      setCheckedState(localBrandFilter);
+    }
+  }, []);
 
   const handleOnChange = (
     position: number,
@@ -38,6 +35,11 @@ const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
       index === position ? !item : item
     );
     setCheckedState(updatedCheckedState);
+
+    localStorage.setItem(
+      "stateBrandFilter",
+      JSON.stringify(updatedCheckedState)
+    );
   };
 
   return (

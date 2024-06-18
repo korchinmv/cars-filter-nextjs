@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getKeysAndValuesInObj } from "@/utils/getKeysAndValuesInObj";
+import { getLocalStorage } from "@/utils/getLocalStorage";
+import { TTarif } from "@/types/Filter";
 import {
   Checkbox,
   FormControl,
@@ -9,11 +11,37 @@ import {
 } from "@mui/material";
 
 interface IFilterItemProps {
-  data: any;
+  data: TTarif;
+  getSelectedCheckbox: any;
 }
 
-const FilterTarif = ({ data }: IFilterItemProps) => {
+const FilterTarif = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
+  const [checkedState, setCheckedState] = useState(
+    new Array(Object.keys(data.values).length).fill(false)
+  );
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  //Получаем состояния фильтра тарифов из локалсторэдж, если данные есть то записываем в стейт компонента
+  useEffect(() => {
+    const localTarifFilter = getLocalStorage("stateTarifFilter");
+
+    if (localTarifFilter) {
+      setCheckedState(localTarifFilter);
+    }
+  }, []);
+
+  //Делаем инпуты управляемыми и записывает состояния инпутов в локалсторэдж
+  const handleOnChange = (position: number) => {
+    const updatedCheckedState = checkedState.map((item, index) =>
+      index === position ? !item : item
+    );
+    setCheckedState(updatedCheckedState);
+
+    localStorage.setItem(
+      "stateTarifFilter",
+      JSON.stringify(updatedCheckedState)
+    );
+  };
 
   return (
     <FormControl sx={{ m: 3 }} component='fieldset'>
@@ -33,30 +61,33 @@ const FilterTarif = ({ data }: IFilterItemProps) => {
             borderTop: "2px solid #ed5564",
           }}
         >
-          {getKeysAndValuesInObj(data.values).map(
-            (value: string, i: number) => {
-              return (
-                <FormControlLabel
-                  key={i}
-                  label={data.values[value]}
-                  labelPlacement='start'
-                  control={
-                    <Checkbox
-                      name={data.type}
-                      value={value}
-                      sx={{
-                        color: "#fff",
-                        right: "0",
-                        "&.Mui-checked": {
-                          color: "#ed5564",
-                        },
-                      }}
-                    />
-                  }
-                />
-              );
-            }
-          )}
+          {getKeysAndValuesInObj(data.values).map((value: any, i: number) => {
+            return (
+              <FormControlLabel
+                key={i}
+                label={data.values[value]}
+                labelPlacement='start'
+                checked={checkedState[i]}
+                onChange={(e) => {
+                  getSelectedCheckbox(e);
+                  handleOnChange(i);
+                }}
+                control={
+                  <Checkbox
+                    name={data.type}
+                    value={value}
+                    sx={{
+                      color: "#fff",
+                      right: "0",
+                      "&.Mui-checked": {
+                        color: "#ed5564",
+                      },
+                    }}
+                  />
+                }
+              />
+            );
+          })}
         </FormGroup>
       )}
     </FormControl>

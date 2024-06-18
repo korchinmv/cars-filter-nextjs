@@ -24,6 +24,7 @@ const FilterModel = ({ data }: IFilterItemProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cars, setCars] = useState<ICar[]>(data.values);
   const filterBrand = useAppSelector(filterBrandCheckboxesSelector);
+  console.log(data);
 
   useEffect(() => {
     if (filterBrand.checkboxes.length > 0) {

@@ -24,10 +24,10 @@ const PaginationComponent = () => {
         variant='outlined'
         size='large'
         defaultPage={1}
+        //При смене страницы делаем запрос на сервер с текущей строкой запроса + номер новой страницы, результат записываем в состояния редакса и пушим новую строку в URL
         onChange={(_, num) => {
           fetchData(`?w=catalog-cars&${queryString.string}&page=${num}`).then(
             (data) => {
-              console.log(data);
               dispatch(getCars(data.success));
               dispatch(updatePage(parseInt(data.success.page)));
               router.push(`/?${queryString.string}&page=${num}`);

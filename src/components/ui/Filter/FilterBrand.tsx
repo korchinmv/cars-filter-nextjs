@@ -1,4 +1,6 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { getLocalStorage } from "@/utils/getLocalStorage";
+import { TBrands } from "@/types/Filter";
 import {
   Checkbox,
   FormControl,
@@ -6,10 +8,9 @@ import {
   FormGroup,
   FormLabel,
 } from "@mui/material";
-import { getLocalStorage } from "@/utils/getLocalStorage";
 
 interface IFilterItemProps {
-  data: any;
+  data: TBrands;
   getSelectedCheckbox: any;
 }
 
@@ -19,6 +20,7 @@ const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  //Получаем состояния фильтра брэндов из локалсторэдж, если данные есть то записываем в стейт компонента
   useEffect(() => {
     const localBrandFilter = getLocalStorage("stateBrandFilter");
 
@@ -27,10 +29,8 @@ const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
     }
   }, []);
 
-  const handleOnChange = (
-    position: number,
-    e: ChangeEvent<HTMLInputElement>
-  ) => {
+  //Делаем инпуты управляемыми и записывает состояния инпутов в локалсторэдж
+  const handleOnChange = (position: number) => {
     const updatedCheckedState = checkedState.map((item, index) =>
       index === position ? !item : item
     );
@@ -70,7 +70,7 @@ const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
                   <Checkbox
                     onChange={(e) => {
                       getSelectedCheckbox(e);
-                      handleOnChange(i, e);
+                      handleOnChange(i);
                     }}
                     name={data.code}
                     value={value}

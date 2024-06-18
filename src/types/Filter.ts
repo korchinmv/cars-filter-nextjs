@@ -9,7 +9,7 @@ export type TBrands = {
 export type TModels = {
   name: string;
   type: string;
-  values: ICar;
+  values: ICar[];
 };
 
 export type TTarif = {

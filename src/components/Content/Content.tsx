@@ -1,5 +1,5 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import { getLocalStorage } from "@/utils/getLocalStorage";
 import { TFilterResponse } from "@/types/Filter";
@@ -9,6 +9,7 @@ import PaginationComponent from "../ui/Pagination/Pagination";
 import Loading from "@/components/Loading/Loading";
 import CarsList from "../CarsList/CarsList";
 import Filter from "../ui/Filter/Filter";
+import Error from "@/components/Error/Error";
 import Title from "../Title/Title";
 import Link from "next/link";
 
@@ -20,9 +21,9 @@ interface ICarsListProps {
 const Content = ({ carsData, filterData }: ICarsListProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const carsListStorage = getLocalStorage("carsList");
-
   const dispatch = useAppDispatch();
 
+  //Проверяем есть ли в локалсторэдже список машин, если нету то добавляем в состояние редакс
   useEffect(() => {
     if (!carsListStorage) {
       dispatch(getCars(carsData));
@@ -31,6 +32,7 @@ const Content = ({ carsData, filterData }: ICarsListProps) => {
     setIsLoading(false);
   }, [dispatch, carsData, carsListStorage]);
 
+  //Если список машин грузится то показывает прелоадер
   if (isLoading) {
     return (
       <div className='flex flex-col justify-between items-center h-screen'>
@@ -48,12 +50,18 @@ const Content = ({ carsData, filterData }: ICarsListProps) => {
       >
         О проекте
       </Link>
-      <div className='flex justify-between max-w-[1200px] w-full'>
+      <div className='flex justify-between items-center max-w-[1200px] w-full'>
         <Filter filterData={filterData} />
 
-        <div className='flex flex-col items-center'>
-          <CarsList />
-          <PaginationComponent />
+        <div className='flex flex-col items-center w-full'>
+          {carsListStorage.list.length !== 0 ? (
+            <>
+              <CarsList />
+              <PaginationComponent />
+            </>
+          ) : (
+            <Error text='Ничего не найдено' css='w-full text-center' />
+          )}
         </div>
       </div>
     </>

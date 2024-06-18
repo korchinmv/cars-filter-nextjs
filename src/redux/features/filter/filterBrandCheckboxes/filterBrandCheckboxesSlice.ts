@@ -22,11 +22,11 @@ export const filterBrandCheckboxesReducer = createSlice({
   name: "filterBrandCheckboxes",
   initialState,
   reducers: {
-    addCheckbox: (state, action: PayloadAction<string>) => {
+    addBrandCheckbox: (state, action: PayloadAction<string>) => {
       state.checkboxes.push(action.payload);
       setItemFunc(state.checkboxes);
     },
-    filterCheckbox: (state, action: PayloadAction<string>) => {
+    filterBrandCheckbox: (state, action: PayloadAction<string>) => {
       const filtred = state.checkboxes.filter(
         (item) => item !== action.payload
       );
@@ -36,7 +36,7 @@ export const filterBrandCheckboxesReducer = createSlice({
   },
 });
 
-export const { addCheckbox, filterCheckbox } =
+export const { addBrandCheckbox, filterBrandCheckbox } =
   filterBrandCheckboxesReducer.actions;
 
 export default filterBrandCheckboxesReducer.reducer;

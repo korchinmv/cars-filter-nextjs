@@ -6,7 +6,6 @@ export default async function Home() {
   const { success: successCarsData, error: errorCarsData } = await fetchData(
     "?w=catalog-cars"
   );
-
   const { success: successFilterData } = await fetchData(`?w=catalog-filter`);
 
   return (

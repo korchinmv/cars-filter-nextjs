@@ -6,6 +6,7 @@ import Slider from "@/components/ui/Slider/Slider";
 import noPicImage from "@/../public/no-pic.jpg";
 import Image from "next/image";
 import Link from "next/link";
+import Error from "@/components/Error/Error";
 
 interface ICarPageProps {
   params: { slug: "string" };
@@ -14,7 +15,13 @@ interface ICarPageProps {
 export async function generateMetadata({
   params: { slug },
 }: ICarPageProps): Promise<Metadata> {
-  const { success } = await fetchData(`?w=catalog-car&id=${slug}`);
+  const { success, error } = await fetchData(`?w=catalog-car&id=${slug}`);
+
+  if (error) {
+    return {
+      title: `${error}`,
+    };
+  }
 
   return {
     title: `Страница машины ${success.item.brand} ${success.item.model}`,
@@ -22,7 +29,15 @@ export async function generateMetadata({
 }
 
 const CarPage = async ({ params: { slug } }: ICarPageProps) => {
-  const { success } = await fetchData(`?w=catalog-car&id=${slug}`);
+  const { success, error } = await fetchData(`?w=catalog-car&id=${slug}`);
+
+  if (error) {
+    return (
+      <div className='flex flex-col justify-center items-center h-screen'>
+        <Error text='Произошла ошибка' />;
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-col justify-center items-center h-screen'>

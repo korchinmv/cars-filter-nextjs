@@ -1,9 +1,9 @@
 import { TCar } from "./Car";
 
-export type CarsResponse = {
+export type TCarsResponse = {
   list: TCar[];
-  page: number;
-  pages: number;
-  per_page: number;
-  result: number;
+  page: number | null;
+  pages: number | null;
+  per_page: number | null;
+  result: number | null;
 };

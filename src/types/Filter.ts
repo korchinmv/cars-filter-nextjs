@@ -1,3 +1,5 @@
+import { ICar } from "@/components/ui/Filter/FilterModel";
+
 export type TBrands = {
   name: string;
   code: string;
@@ -7,7 +9,7 @@ export type TBrands = {
 export type TModels = {
   name: string;
   type: string;
-  values: { brand: string; models: string[] };
+  values: ICar;
 };
 
 export type TTarif = {

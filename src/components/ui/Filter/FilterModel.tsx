@@ -8,30 +8,33 @@ import {
   FormGroup,
   FormLabel,
 } from "@mui/material";
+import { useAppSelector } from "@/redux/hooks";
+import { filterBrandCheckboxesSelector } from "@/redux/features/filter/filterBrandCheckboxes/filterBrandCheckboxesSelector";
 
 interface IFilterItemProps {
   data: any;
-  selectedCheckbox: string[];
 }
 
-interface ICar {
+export interface ICar {
   brand: string;
   models: string[];
 }
 
-const FilterModel = ({ data, selectedCheckbox }: IFilterItemProps) => {
+const FilterModel = ({ data }: IFilterItemProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cars, setCars] = useState<ICar[]>(data.values);
-  console.log(cars);
+  const filterBrand = useAppSelector(filterBrandCheckboxesSelector);
 
   useEffect(() => {
-    if (selectedCheckbox.length > 0) {
+    if (filterBrand.checkboxes.length > 0) {
       const filtredCheckboxes = data.values.filter((car: ICar) =>
-        selectedCheckbox.includes(car.brand)
+        filterBrand.checkboxes.includes(car.brand)
       );
       setCars(filtredCheckboxes);
+    } else {
+      setCars(data.values);
     }
-  }, [selectedCheckbox]);
+  }, [filterBrand.checkboxes]);
 
   return (
     <FormControl sx={{ m: 3 }} component='fieldset'>

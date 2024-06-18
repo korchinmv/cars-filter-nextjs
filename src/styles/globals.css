@@ -43,3 +43,8 @@ body {
 .Mui-focused {
   color: #ed5564 !important;
 }
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  color: #ed5564;
+}

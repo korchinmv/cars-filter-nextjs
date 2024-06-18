@@ -1,10 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
+import filterBrandCheckboxesReducer from "./features/filter/filterBrandCheckboxes/filterBrandCheckboxesSlice";
+import queryStringReducer from "./features/queryString/queryStringSlice";
 import paginationReducer from "./features/pagination/paginationSlice";
 import carsReducer from "./features/cars/carsSlice";
 
 export const store = () => {
   return configureStore({
-    reducer: { carsReducer, paginationReducer },
+    reducer: {
+      carsReducer,
+      paginationReducer,
+      queryStringReducer,
+      filterBrandCheckboxesReducer,
+    },
   });
 };
 

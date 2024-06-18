@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { getKeysAndValuesInObj } from "@/utils/getKeysAndValuesInObj";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
   Checkbox,
   FormControl,
@@ -7,6 +6,7 @@ import {
   FormGroup,
   FormLabel,
 } from "@mui/material";
+import { getLocalStorage } from "@/utils/getLocalStorage";
 
 interface IFilterItemProps {
   data: any;
@@ -14,7 +14,31 @@ interface IFilterItemProps {
 }
 
 const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
+  const [checkedState, setCheckedState] = useState(
+    new Array(data.values.length).fill(false)
+  );
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const stateBrandFilter = getLocalStorage("stateBrandFilter");
+
+  // useEffect(() => {
+  //   if (!stateBrandFilter) {
+  //     localStorage.setItem("stateBrandFilter", JSON.stringify(checkedState));
+  //   } else {
+  //     setCheckedState(stateBrandFilter);
+  //   }
+  // }, [stateBrandFilter]);
+
+  console.log(checkedState);
+
+  const handleOnChange = (
+    position: number,
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedCheckedState = checkedState.map((item, index) =>
+      index === position ? !item : item
+    );
+    setCheckedState(updatedCheckedState);
+  };
 
   return (
     <FormControl sx={{ m: 3 }} component='fieldset'>
@@ -42,9 +66,13 @@ const FilterBrand = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
                 labelPlacement='start'
                 control={
                   <Checkbox
-                    onChange={(e) => getSelectedCheckbox(e)}
-                    name={`${data.code}[]`}
+                    onChange={(e) => {
+                      getSelectedCheckbox(e);
+                      handleOnChange(i, e);
+                    }}
+                    name={data.code}
                     value={value}
+                    checked={checkedState[i]}
                     sx={{
                       color: "#fff",
                       right: "0",

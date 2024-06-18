@@ -1,10 +1,11 @@
 "use client";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import { getLocalStorage } from "@/utils/getLocalStorage";
 import { TFilterResponse } from "@/types/Filter";
-import { CarsResponse } from "@/types/CarsResponse";
+import { TCarsResponse } from "@/types/CarsResponse";
 import { getCars } from "@/redux/features/cars/carsSlice";
+
 import PaginationComponent from "../ui/Pagination/Pagination";
 import Loading from "@/components/Loading/Loading";
 import CarsList from "../CarsList/CarsList";
@@ -13,25 +14,31 @@ import Title from "../Title/Title";
 import Link from "next/link";
 
 interface ICarsListProps {
-  carsData: CarsResponse;
+  carsData: TCarsResponse;
   filterData: TFilterResponse;
 }
 
 const Content = ({ carsData, filterData }: ICarsListProps) => {
+  const [allCars, setAllCars] = useState<TCarsResponse>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const dispatch = useAppDispatch();
   const carsListStorage = getLocalStorage("carsList");
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!carsListStorage) {
-      dispatch(getCars(carsData.list));
+      dispatch(getCars(carsData));
+      setAllCars(carsData);
     }
 
     setIsLoading(false);
-  }, [dispatch, carsData.list, carsListStorage]);
+  }, [dispatch, carsData, carsListStorage]);
 
   if (isLoading) {
-    return <Loading text='Список машин загружается..' />;
+    return (
+      <div className='flex flex-col justify-between items-center h-screen'>
+        <Loading text='Список машин загружается..' />
+      </div>
+    );
   }
 
   return (
@@ -47,8 +54,19 @@ const Content = ({ carsData, filterData }: ICarsListProps) => {
         <Filter filterData={filterData} />
 
         <div className='flex flex-col items-center'>
-          <CarsList />
-          <PaginationComponent pageQty={carsData.pages} page={carsData.page} />
+          <CarsList allCars={allCars} />
+          {/* <PaginationComponent
+            pageQty={
+              filtredCars.resp.list.length > 0
+                ? filtredCars.resp.pages
+                : carsData.pages
+            }
+            page={
+              filtredCars.resp.list.length > 0
+                ? filtredCars.resp.page
+                : carsData.page
+            }
+          /> */}
         </div>
       </div>
     </>

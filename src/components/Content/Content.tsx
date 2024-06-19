@@ -1,9 +1,10 @@
 "use client";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import { getLocalStorage } from "@/utils/getLocalStorage";
 import { TFilterResponse } from "@/types/Filter";
 import { TCarsResponse } from "@/types/CarsResponse";
+import { carsSelector } from "@/redux/features/cars/carsSelector";
 import { getCars } from "@/redux/features/cars/carsSlice";
 import PaginationComponent from "../ui/Pagination/Pagination";
 import Loading from "@/components/Loading/Loading";
@@ -21,6 +22,7 @@ interface ICarsListProps {
 const Content = ({ carsData, filterData }: ICarsListProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const carsListStorage = getLocalStorage("carsList");
+  const currentCars = useAppSelector(carsSelector);
   const dispatch = useAppDispatch();
 
   //Проверяем есть ли в локалсторэдже список машин, если нету то добавляем в состояние редакс
@@ -50,14 +52,14 @@ const Content = ({ carsData, filterData }: ICarsListProps) => {
       >
         О проекте
       </Link>
-      <div className='flex justify-between items-center max-w-[1200px] w-full'>
+      <div className='flex justify-between max-w-[1200px] w-full'>
         <Filter filterData={filterData} />
 
         <div className='flex flex-col items-center w-full'>
-          {carsListStorage.list.length !== 0 ? (
+          {currentCars.cars.list.length !== 0 ? (
             <>
               <CarsList />
-              <PaginationComponent />
+              {currentCars.cars.pages !== 1 ? <PaginationComponent /> : null}
             </>
           ) : (
             <Error text='Ничего не найдено' css='w-full text-center' />

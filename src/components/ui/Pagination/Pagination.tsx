@@ -19,6 +19,7 @@ const PaginationComponent = () => {
   return (
     <Theme>
       <Pagination
+        className='mt-auto'
         count={currentCars.cars.pages !== null ? currentCars.cars.pages : 1}
         page={currentPage.page}
         variant='outlined'

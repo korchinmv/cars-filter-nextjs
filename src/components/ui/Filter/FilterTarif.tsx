@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { filterTarifCheckboxesSelector } from "@/redux/features/filter/filterTarifCheckboxes/filterTarifCheckboxesSelector";
 import { getKeysAndValuesInObj } from "@/utils/getKeysAndValuesInObj";
+import { useEffect, useState } from "react";
 import { getLocalStorage } from "@/utils/getLocalStorage";
 import { TTarif } from "@/types/Filter";
 import {
@@ -9,26 +11,33 @@ import {
   FormGroup,
   FormLabel,
 } from "@mui/material";
+import {
+  addTarifCheckbox,
+  filterTarifCheckbox,
+} from "@/redux/features/filter/filterTarifCheckboxes/filterTarifCheckboxesSlice";
 
 interface IFilterItemProps {
   data: TTarif;
-  getSelectedCheckbox: any;
 }
 
-const FilterTarif = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
+const FilterTarif = ({ data }: IFilterItemProps) => {
   const [checkedState, setCheckedState] = useState(
     new Array(Object.keys(data.values).length).fill(false)
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const filterTarif = useAppSelector(filterTarifCheckboxesSelector);
+  const dispatch = useAppDispatch();
 
-  //Получаем состояния фильтра тарифов из локалсторэдж, если данные есть то записываем в стейт компонента
-  useEffect(() => {
-    const localTarifFilter = getLocalStorage("stateTarifFilter");
+  //Получаем массив активных чекбоксов в фильтре тарифов, реализуем удаление активного чекбокса из массива с помощью редакс
+  const getSelectedCheckbox = (e: any) => {
+    const { value } = e.target;
 
-    if (localTarifFilter) {
-      setCheckedState(localTarifFilter);
+    if (filterTarif.checkboxes.includes(value)) {
+      dispatch(filterTarifCheckbox(value));
+    } else {
+      dispatch(addTarifCheckbox(value));
     }
-  }, []);
+  };
 
   //Делаем инпуты управляемыми и записывает состояния инпутов в локалсторэдж
   const handleOnChange = (position: number) => {
@@ -42,6 +51,15 @@ const FilterTarif = ({ data, getSelectedCheckbox }: IFilterItemProps) => {
       JSON.stringify(updatedCheckedState)
     );
   };
+
+  //Получаем состояния фильтра тарифов из локалсторэдж, если данные есть то записываем в стейт компонента
+  useEffect(() => {
+    const localTarifFilter = getLocalStorage("stateTarifFilter");
+
+    if (localTarifFilter) {
+      setCheckedState(localTarifFilter);
+    }
+  }, []);
 
   return (
     <FormControl sx={{ m: 3 }} component='fieldset'>

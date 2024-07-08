@@ -7,7 +7,6 @@
 - TypeScript
 - Next.js (SSR, fetch)
 - Redux Toolkit
--
 
 - [Ссылка на проект] https://cars-filter-nextjs.vercel.app/
 
